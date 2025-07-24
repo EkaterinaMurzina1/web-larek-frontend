@@ -60,6 +60,10 @@
     border-radius: 2.5rem;
     margin-bottom: 12px;
     color: $primary;
+    margin-right: 300px;
+     @media (max-width: 1342px) {
+       margin-right: 0px; }
+    
 
     &_soft {
       background-color: $category1;
