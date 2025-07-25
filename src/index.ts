@@ -46,7 +46,7 @@ api
 		console.error(err);
 	});
 
-// Обновление каталога 
+// Обновление каталога
 events.on('items:changed', () => {
 	page.catalog = appData.getCatalog().map((item) => {
 		const card = new Card(cloneTemplate(cardCatalogTemplate), {
@@ -115,7 +115,8 @@ events.on('basket:open', () => {
 
 	basket.items = basketItems;
 	basket.total = appData.getTotalPrice();
-	basket.selected = appData.basket;
+	basket.isButtonDisabled = appData.basket.length === 0;
+	basket.updateIndex();
 
 	modal.render({
 		content: basket.render({}),
@@ -129,6 +130,7 @@ events.on('basket:remove', (item: IProduct) => {
 	);
 	page.counter = appData.basket.length;
 	events.emit('basket:open');
+	basket.updateIndex();
 });
 
 // Открытие формы заказа
@@ -142,6 +144,8 @@ events.on('order:open', () => {
 		content: order.render({
 			valid: false,
 			errors: [],
+			address: appData.order.address,
+			payment: appData.order.payment,
 		}),
 	});
 });
@@ -165,6 +169,8 @@ events.on('order:submit', () => {
 			content: contacts.render({
 				valid: false,
 				errors: [],
+				email: appData.order.email,
+				phone: appData.order.phone,
 			}),
 		});
 	}
@@ -192,8 +198,10 @@ events.on('contacts:submit', () => {
 					{
 						onClick: () => {
 							modal.close();
-							appData.basket = [];
+							appData.resetBasket();
+							appData.resetOrder();
 							page.counter = 0;
+							basket.updateIndex();
 						},
 					},
 					result.total
@@ -217,6 +225,7 @@ events.on('modal:open', () => {
 // Разблокировка прокрутки страницы при закрытии модального окна
 events.on('modal:close', () => {
 	page.locked = false;
+	appData.resetOrder();
 });
 
 // Обработка ошибок формы
@@ -228,3 +237,19 @@ events.on(
 		contacts.errors = [email, phone].filter(Boolean).join('; ');
 	}
 );
+
+events.on('form:reset', () => {
+	appData.resetOrder();
+	order.render({
+		valid: false,
+		errors: [],
+		address: '',
+		payment: null,
+	});
+	contacts.render({
+		valid: false,
+		errors: [],
+		email: '',
+		phone: '',
+	});
+});

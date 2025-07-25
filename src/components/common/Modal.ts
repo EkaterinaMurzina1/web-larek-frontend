@@ -40,8 +40,8 @@ export class Modal extends Component<IModalData> {
 
 	render(data: IModalData): HTMLElement {
 		super.render(data);
-		this._content.replaceChildren(data.content); // Сначала добавляем контент
-		this.open(); // Затем открываем модальное окно
+		this._content.replaceChildren(data.content); 
+		this.open();
 		return this.container;
 	}
 }

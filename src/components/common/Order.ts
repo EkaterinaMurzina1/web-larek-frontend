@@ -4,35 +4,53 @@ import { IEvents } from '../base/events';
 import { ensureAllElements } from '../../utils/utils';
 
 export class Order extends Form<IOrder> {
-  protected _paymentButtons: HTMLButtonElement[];
+	protected _paymentButtons: HTMLButtonElement[];
+	protected _currentSelection: string | null = null;
 
-  constructor(protected container: HTMLFormElement, events: IEvents) {
-    super(container, events);
-    this._paymentButtons = ensureAllElements<HTMLButtonElement>('.button_alt', container);
+	constructor(protected container: HTMLFormElement, events: IEvents) {
+		super(container, events);
+		this._paymentButtons = ensureAllElements<HTMLButtonElement>(
+			'.button_alt',
+			container
+		);
 
-    this._paymentButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        this.selected = button.name;
-      });
-    });
-  }
+		this._paymentButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				this.selected = button.name;
+			});
+		});
 
-  set address(value: string) {
-    (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
-  }
+		events.on('modal:close', () => {
+			this.removeSelected();
+		});
+	}
 
-  set phone(value: string) {
-    (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
-  }
+	protected removeSelected() {
+		this._paymentButtons.forEach((button) => {
+			this.toggleClass(button, 'button_alt-active', false);
+		});
+		this._currentSelection = null;
+	}
 
-  set email(value: string) {
-    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
-  }
+	set address(value: string) {
+		(this.container.elements.namedItem('address') as HTMLInputElement).value =
+			value;
+	}
 
-  set selected(name: string) {
-    this._paymentButtons.forEach((button) => {
-      this.toggleClass(button, 'button_alt-active', button.name === name);
-    });
-    this.events.emit('payment:change', { name });
-  }
+	set phone(value: string) {
+		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
+			value;
+	}
+
+	set email(value: string) {
+		(this.container.elements.namedItem('email') as HTMLInputElement).value =
+			value;
+	}
+
+	set selected(name: string) {
+		this._paymentButtons.forEach((button) => {
+			this.toggleClass(button, 'button_alt-active', button.name === name);
+		});
+		this.events.emit('payment:change', { name });
+	}
 }

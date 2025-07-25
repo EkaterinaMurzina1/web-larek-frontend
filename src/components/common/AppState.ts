@@ -109,4 +109,22 @@ export class AppState extends Model<IAppState> {
 			});
 		}
 	}
+
+	resetOrder() {
+		this.order = {
+			phone: '',
+			address: '',
+			email: '',
+			payment: null,
+			items: [],
+			total: 0,
+		};
+		this.formErrors = {};
+		this.emitChanges('order:reset');
+	}
+	
+	resetBasket() {
+		this.basket = [];
+		this.emitChanges('basket:changed');
+	}
 }

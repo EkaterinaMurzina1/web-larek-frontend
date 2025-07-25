@@ -8,7 +8,6 @@ export interface IProduct {
 }
 
 export interface ICard extends IProduct {
-	button: string;
 	inBasket?: boolean;
 }
 
@@ -19,7 +18,6 @@ export interface ICardActions {
 export interface IBasketView {
 	items: HTMLElement[];
 	total: number;
-	selected: string[];
 }
 
 export interface IFormState {
@@ -29,6 +27,8 @@ export interface IFormState {
 export interface IOrderForm {
 	payment: PaymentMethods;
 	address: string;
+	email: string;
+    phone: string;
 }
 
 export interface IContactsForm {
@@ -78,4 +78,11 @@ export interface IPage {
 	catalog: HTMLElement[];
 	counter: number;
 	locked: boolean;
+}
+
+export interface IBasketItem {
+    index: number;  
+    title: string;  
+    price: number;  
+    id: string;     
 }

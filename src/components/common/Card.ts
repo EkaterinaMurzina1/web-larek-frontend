@@ -56,7 +56,7 @@ export class Card extends Component<ICard> {
 	set image(value: string) {
 		this.setImage(this._image, value, this.title);
 	}
-  
+
 	set description(value: string | string[]) {
 		this.setText(this._description, value);
 	}
@@ -69,7 +69,7 @@ export class Card extends Component<ICard> {
 		return this._title.textContent || '';
 	}
 
-	set price(value: string) {
+	set price(value: number | null) {
 		if (value === null) {
 			this.setText(this._price, 'Бесценно');
 			this._button?.setAttribute('disabled', 'disabled');
@@ -78,8 +78,10 @@ export class Card extends Component<ICard> {
 		}
 	}
 
-	get price(): string {
-		return this._price.textContent;
+	get price(): number | null {
+		const text = this._price.textContent;
+		if (text === 'Бесценно') return null;
+		return parseInt(text.replace(' синапсов', '')) || 0;
 	}
 
 	set category(value: string) {
