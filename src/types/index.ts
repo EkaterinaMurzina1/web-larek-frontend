@@ -9,6 +9,7 @@ export interface IProduct {
 
 export interface ICard extends IProduct {
 	inBasket?: boolean;
+	index: number;
 }
 
 export interface ICardActions {
@@ -78,11 +79,4 @@ export interface IPage {
 	catalog: HTMLElement[];
 	counter: number;
 	locked: boolean;
-}
-
-export interface IBasketItem {
-    index: number;  
-    title: string;  
-    price: number;  
-    id: string;     
 }

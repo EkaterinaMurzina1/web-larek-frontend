@@ -1,8 +1,7 @@
 import { Component } from '../base/component';
 import { createElement, ensureElement } from '../../utils/utils';
 import { EventEmitter } from '../base/events';
-import { IProduct, IBasketView } from '../../types';
-import { IBasketItem } from '../../types';
+import { IBasketView } from '../../types';
 
 export class Basket extends Component<IBasketView> {
 	protected _list: HTMLElement;
@@ -30,8 +29,6 @@ export class Basket extends Component<IBasketView> {
 	}
 
 	set items(items: HTMLElement[]) {
-		this._list.replaceChildren(...items);
-
 		if (items.length <= 0) {
 			this._button.disabled = true;
 			this._list.replaceChildren(
@@ -41,6 +38,7 @@ export class Basket extends Component<IBasketView> {
 			);
 		} else {
 			this._button.disabled = false;
+			this._list.replaceChildren(...items);
 		}
 	}
 
@@ -50,40 +48,5 @@ export class Basket extends Component<IBasketView> {
 
 	set total(value: number) {
 		this.setText(this._total, `${value} синапсов`);
-	}
-
-	updateIndex() {
-		Array.from(this._list.children).forEach((item, index) => {
-			const numbering = item.querySelector('.basket__item-index');
-			if (numbering) {
-				numbering.textContent = (index + 1).toString();
-			}
-		});
-	}
-}
-
-export class BasketItem extends Component<IBasketItem> {
-	protected _index: HTMLElement;
-	protected _title: HTMLElement;
-	protected _price: HTMLElement;
-
-	constructor(container: HTMLElement, protected events?: EventEmitter) {
-		super(container);
-
-		this._index = ensureElement<HTMLElement>('.basket__item-index', container);
-		this._title = ensureElement<HTMLElement>('.basket__item-title', container);
-		this._price = ensureElement<HTMLElement>('.basket__item-price', container);
-	}
-
-	set index(value: number) {
-		this.setText(this._index, value.toString());
-	}
-
-	set title(value: string) {
-		this.setText(this._title, value);
-	}
-
-	set price(value: number) {
-		this.setText(this._price, `${value} синапсов`);
 	}
 }
